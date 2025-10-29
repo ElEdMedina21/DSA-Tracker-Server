@@ -24,8 +24,32 @@ function writeDB(data){
 }
 
 app.post("/newProblem", async(req,res)=>{
-    const db = readDB()
-    console.log(req.body)
+    const {problemName, difficulty, topics, link} = req.body
+
+    if(!problemName || !difficulty || !topics || !link){
+        return res.json({code:400, message:"There are missing fields"})
+    }
+
+    const problems = readDB()
+    console.log(problems)
+    const now = new Date().toISOString();
+    const existing = problems.find(p => p.problemName === problemName)
+
+    if(existing){
+        existing.lastSolved = now
+    }
+    else{
+        const newProblem = {
+            id: problems.length ? problems.at(-1).id + 1 : 1,
+            problemName,
+            difficulty,
+            lastSolved: now
+        }
+        problems.push(newProblem)
+    }
+
+    writeDB(problems)
+    return res.json({code:201, message: "Problem added successfully."})
 })
 
 app.listen(process.env.PORT || port, ()=>{
