@@ -23,6 +23,11 @@ function writeDB(data){
     fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2))
 }
 
+app.get("/problems", async(req,res)=>{
+    const problems = readDB()
+    return res.json(problems)
+})
+
 app.post("/newProblem", async(req,res)=>{
     const {problemName, difficulty, topics, link} = req.body
 
