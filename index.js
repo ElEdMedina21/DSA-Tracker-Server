@@ -23,6 +23,26 @@ function writeDB(data){
     fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2))
 }
 
+app.get("/recommendations", async(req,res)=>{
+    const problems = readDB()
+
+    const now = new Date();
+
+    const recommendations = problems.filter(problem => {
+    const lastSolved = new Date(problem.lastSolved);
+    const daysSinceSolved = (now - lastSolved) / (1000 * 60 * 60 * 24);
+
+    if (problem.difficulty === "easy") return daysSinceSolved >= 4;
+    if (problem.difficulty === "medium") return daysSinceSolved >= 3;
+    if (problem.difficulty === "hard") return daysSinceSolved >= 7;
+  });
+
+  console.log(recommendations)
+
+  return res.json(recommendations)
+
+})
+
 app.get("/problems", async(req,res)=>{
     const problems = readDB()
     return res.json(problems)
@@ -36,7 +56,6 @@ app.post("/newProblem", async(req,res)=>{
     }
 
     const problems = readDB()
-    console.log(problems)
     const now = new Date().toISOString();
     const existing = problems.find(p => p.problemName === problemName)
 
