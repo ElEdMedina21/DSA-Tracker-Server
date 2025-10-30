@@ -1,8 +1,34 @@
 [
   {
     "id": 1,
-    "problemName": "Longest Consecutive Sequence",
-    "difficulty": "medium",
-    "lastSolved": "2025-10-20T03:28:55.408Z"
+    "problemName": "Valid parentheses",
+    "difficulty": "easy",
+    "link": "https://leetcode.com/problems/valid-parentheses/description",
+    "topics": [
+      "Stack"
+    ],
+    "lastSolved": "2025-10-30T17:31:40.985Z"
+  },
+  {
+    "id": 2,
+    "problemName": "Two Sum",
+    "difficulty": "easy",
+    "link": "https://leetcode.com/problems/two-sum/description",
+    "topics": [
+      "Arrays",
+      "Hash maps"
+    ],
+    "lastSolved": "2025-10-30T17:33:04.774Z"
+  },
+  {
+    "id": 3,
+    "problemName": "Valid Anagram",
+    "difficulty": "easy",
+    "link": "https://leetcode.com/problems/valid-anagram/description",
+    "topics": [
+      "Arrays",
+      "Hash Maps"
+    ],
+    "lastSolved": "2025-10-25T16:42:03.859Z"
   }
 ]

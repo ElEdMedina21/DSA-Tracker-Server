@@ -37,43 +37,59 @@ app.get("/recommendations", async(req,res)=>{
     if (problem.difficulty === "hard") return daysSinceSolved >= 7;
   });
 
-  console.log(recommendations)
-
   return res.json(recommendations)
 
 })
 
-app.get("/problems", async(req,res)=>{
+app.get("/problems", (req,res)=>{
     const problems = readDB()
     return res.json(problems)
 })
 
-app.post("/newProblem", async(req,res)=>{
+app.post("/newProblem", (req,res)=>{
     const {problemName, difficulty, topics, link} = req.body
 
     if(!problemName || !difficulty || !topics || !link){
+        console.log("test")
         return res.json({code:400, message:"There are missing fields"})
     }
 
-    const problems = readDB()
-    const now = new Date().toISOString();
-    const existing = problems.find(p => p.problemName === problemName)
+    try{
+        const problems = readDB()
+        const now = new Date().toISOString();
+        const existing = problems.find(p => p.problemName === problemName)
 
-    if(existing){
-        existing.lastSolved = now
-    }
-    else{
-        const newProblem = {
-            id: problems.length ? problems.at(-1).id + 1 : 1,
-            problemName,
-            difficulty,
-            lastSolved: now
+        if(existing){
+            existing.lastSolved = now
         }
-        problems.push(newProblem)
-    }
+        else{
+            const newProblem = {
+                id: problems.length ? problems.at(-1).id + 1 : 1,
+                problemName,
+                difficulty,
+                link,
+                topics,
+                lastSolved: now
+            }
+            problems.push(newProblem)
+        }
 
+        writeDB(problems)
+        return res.json({code:201, message: "Problem added successfully."}) 
+    }
+    catch(error){
+        console.error(error)
+    }
+})
+
+app.patch("/solveProblem", (req,res)=>{
+    const {problemId} = req.body
+    const problems = readDB()
+    const now = new Date().toISOString()
+    const updatedProblem = problems.find(problem => problem.id === problemId)
+    updatedProblem.lastSolved = now
     writeDB(problems)
-    return res.json({code:201, message: "Problem added successfully."})
+    return res.json({code:200, message:"Problem updated successfully"})
 })
 
 app.listen(process.env.PORT || port, ()=>{
